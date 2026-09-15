@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Stockastic.Domain.Entities
 {
-    internal class Market_Data
+    public class MarketData
     {
     }
 }

@@ -8,11 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="UI\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EFCore.BulkExtensions.PostgreSql" Version="10.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.12" />

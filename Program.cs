@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Stockastic.Data;
+using Stockastic.UI;
 using System;
 class Program
 {
@@ -18,6 +19,9 @@ class Program
 
         using var dbContext = new ApplicationDbContext(dbContextOptions);
         Console.WriteLine(dbContext.Database.CanConnect());
+
+        App app = new App();
+        app.Run();
     }
 }
 
