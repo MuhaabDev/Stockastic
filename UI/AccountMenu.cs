@@ -1,36 +1,55 @@
-﻿using Stockastic.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Stockastic.UI
+﻿using Stockastic.Data;
+using Stockastic.Domain.Entities;
+using Stockastic.Services;
+namespace Stockastic.UI;
+public class AccountMenu(AuthService authService)
 {
-    public class AccountMenu
+    public User? Show()
     {
-        AccountService AccountService { get; set; }
-        public AccountMenu(List<User> users)
+        Console.WriteLine("1. Login");
+        Console.WriteLine("2. Register");
+        Console.Write("Choose: ");
+
+        if(!int.TryParse(Console.ReadLine(), out int option))
         {
-            AccountService = new AccountService(users);
+            Console.WriteLine("Invalid Input");
+            return null;
         }
-        public void Show()
-        {
-            Console.WriteLine("1: Login \t\t 2: Register \t\t 3 : Exit");
-            var isSuccesfull = int.TryParse(Console.ReadLine(), out int op);
-            switch (op)
-            {
-                case 1:
-                    AccountService.LogIn();
-                    break;
-                case 2:
-                    AccountService.Register();
-                    break;
-                case 3:
-                    AccountService.CloseProgram();
-                    break;
-                default:
-                    Console.WriteLine("Wrong input, Try Again !");
-                    break;
-            }
+
+        switch (option) {
+            case 1: 
+                return Login();
+            case 2:
+                Register();
+                return null;
+            default:
+                Console.WriteLine("Invalid option.");
+                return null;
         }
+    }
+
+    private User? Login()
+    {
+        Console.Write("Username: ");
+        var username = Console.ReadLine();
+
+        Console.Write("Password: ");
+        var password = Console.ReadLine();
+
+        return authService.Login(username!, password!);
+    }
+
+    private void Register()
+    {
+        Console.Write("Username: ");
+        var username = Console.ReadLine();
+
+        Console.Write("Email: ");
+        var email = Console.ReadLine();
+
+        Console.Write("Password: ");
+        var password = Console.ReadLine();
+
+        authService.Register(username!, email!, password!);
     }
 }

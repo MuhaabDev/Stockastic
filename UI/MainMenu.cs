@@ -1,40 +1,27 @@
-﻿using Stockastic.Domain.Entities;
+﻿using Stockastic.Data;
+using Stockastic.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-namespace Stockastic.UI
+namespace Stockastic.UI;
+public class MainMenu(AccountMenu accountMenu , UserMenu userMenu)
 {
-    public class MainMenu
+    public void Show()
     {
-        public void StartProgram()
+        displayHeader();
+        while (true)
         {
-            displayHeader();
-
-            AccountMenu accountMenu;
-            UserMenu userMenu;
-
-            while (Accounts.running)
-            {
-                if (Accounts.loggedIn) //Show User Menu
-                {
-                    userMenu = new UserMenu(users, dataService);
-                    userMenu.Show();
-                }
-                else // Register/Login
-                {
-                    accountMenu = new AccountMenu(users);
-                    accountMenu.Show();
-                }
-            }
+            var currentUser = accountMenu.Show();
+            if (currentUser is null) continue;
+            userMenu.Show(currentUser);
         }
+    }
 
-        public void displayHeader()
-        {
-            Console.Title = "Stock Portfolio Tracker";
-            Console.WriteLine("==========================================================");
-            Console.WriteLine("               Welcome To Stock Portfolio Tracker");
-            Console.WriteLine("==========================================================");
-        }
+    public void displayHeader()
+    {
+        Console.Title = "Stock Portfolio Tracker";
+        Console.WriteLine("==========================================================");
+        Console.WriteLine("               Welcome To Stock Portfolio Tracker");
+        Console.WriteLine("==========================================================");
     }
 }

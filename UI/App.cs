@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Stockastic.Data;
+using System;
 using System.Collections.Generic;
 using System.Text;
-namespace Stockastic.UI
+namespace Stockastic.UI;
+public class App(MainMenu mainMenu)
 {
-    public class App
+    public void Show()
     {
-        public void Run()
-        {
-            MainMenu MainMenu = new MainMenu();
-            MainMenu.StartProgram();
-        }
+        mainMenu.Show();
     }
 }

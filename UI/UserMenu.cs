@@ -1,52 +1,80 @@
-﻿using Stockastic.Domain.Entities;
+﻿using Stockastic.Data;
+using Stockastic.Domain.Entities;
 using Stockastic.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Stockastic.UI
+namespace Stockastic.UI;
+public class UserMenu(AccountService accountService , PortfolioService portfolioService , TradingService tradingService)
 {
-    public class UserMenu
+    public void Show(User currentUser)
     {
-        DataService dataService;
-        List<User> users;
-        User CurrentUser;
-        public UserMenu(List<User> users, DataService dataService)
-        {
-            this.dataService = dataService;
-            this.users = users;
-            CurrentUser = users[Accounts.currentAccount];
-        }
-        public void Show()
-        {
-            UserService userService = new UserService(CurrentUser);
-            Console.ForegroundColor = CurrentUser.SelectedColor ?? ConsoleColor.White;
-            Settings settings = new Settings(CurrentUser);
-
-            int op1 = UserService.displayUserService();
-            switch (op1)
+        while (true) {
+            DisplayMenu();
+            if (!int.TryParse(Console.ReadLine(), out int option))
+            {
+                Console.WriteLine("Invalid input.");
+                continue;
+            }
+            switch (option)
             {
                 case 1:
-                    userService.displayBalance();
+                    DisplayBalance(currentUser);
                     break;
+
                 case 2:
-                    userService.AddMoney();
-                    dataService?.SaveUsers(users);
+                    AddMoney(currentUser);
                     break;
+
                 case 3:
-                    TradingMenu menu = new TradingMenu();
-                    menu.Show(CurrentUser);
-                    dataService?.SaveUsers(users);
+                    Trading(currentUser);
                     break;
+
                 case 4:
-                    settings.DisplaySettings();
-                    dataService?.SaveUsers(users);
+                    DisplaySettings(currentUser);
                     break;
+
                 case 5:
-                    Accounts.loggedIn = false;
-                    Console.ForegroundColor = ConsoleColor.White;
+                    return;
+
+                default:
+                    Console.WriteLine("Invalid option.");
                     break;
             }
         }
+    }
+    private void DisplayMenu()
+    {
+        Console.WriteLine();
+        Console.WriteLine("1. Display Balance");
+        Console.WriteLine("2. Add Money");
+        Console.WriteLine("3. Trading");
+        Console.WriteLine("4. Settings");
+        Console.WriteLine("5. Logout");
+        Console.Write("Choose: ");
+    }
+
+    private void DisplayBalance(User user)
+    {
+        var balance = accountService.GetBalance(user.Id);
+        Console.WriteLine($"Balance: {balance}");
+    }
+
+
+    private void AddMoney(User user)
+    {
+        // read amount
+        // call accountService.AddMoney(...)
+    }
+
+    private void Trading(User user)
+    {
+        // tradingService...
+    }
+
+    private void DisplaySettings(User user)
+    {
+        // settings...
     }
 }

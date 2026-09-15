@@ -26,18 +26,18 @@ namespace Stockastic.Services
             return op;
         }
 
-        public void displayBalance()
-        {
-            decimal currentBalance = user.portfolio.DisplayCash();
-            Console.WriteLine($"Current Balance : {currentBalance}");
-        }
+        //public void displayBalance()
+        //{
+        //    decimal currentBalance = user.portfolio.DisplayCash();
+        //    Console.WriteLine($"Current Balance : {currentBalance}");
+        //}
 
-        public void AddMoney()
-        {
-            Console.WriteLine("Enter The Amount you Want to Add");
-            var isSuccesful = decimal.TryParse(Console.ReadLine(), out decimal amount);
-            user.portfolio.AddCash(amount);
-        }
+        //public void AddMoney()
+        //{
+        //    Console.WriteLine("Enter The Amount you Want to Add");
+        //    var isSuccesful = decimal.TryParse(Console.ReadLine(), out decimal amount);
+        //    user.portfolio.AddCash(amount);
+        //}
 
     }
 }

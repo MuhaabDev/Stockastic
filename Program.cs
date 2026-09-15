@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Stockastic.Data;
+using Stockastic.Services;
 using Stockastic.UI;
 using System;
 class Program
@@ -17,11 +18,42 @@ class Program
             .UseNpgsql(connectionString)
             .Options;
 
-        using var dbContext = new ApplicationDbContext(dbContextOptions);
-        Console.WriteLine(dbContext.Database.CanConnect());
+        using var context = new ApplicationDbContext(dbContextOptions);
+        //Console.WriteLine(dbContext.Database.CanConnect());
 
-        App app = new App();
-        app.Run();
+        // Services
+        var authService = new AuthService(context);
+        var accountService = new AccountService(context);
+        var portfolioService = new PortfolioService(context);
+        var tradingService = new TradingService(context);
+
+        // Menus
+        var accountMenu = new AccountMenu(authService);
+        var userMenu = new UserMenu(accountService, portfolioService , tradingService);
+
+        // Main menu
+        var mainMenu = new MainMenu(accountMenu,userMenu);
+
+        // App
+        var app = new App(mainMenu);
+
+        app.Show();
     }
 }
+/*
+                     ApplicationDbContext
+                   /        |         \
+                  /         |          \
+                 ↓          ↓           ↓
+           AuthService  AccountService  PortfolioService
+                 ↓          ↓           ↓
+           AccountMenu   UserMenu     UserMenu
+                              \          /
+                               \        /
+                                ↓      ↓
+                               MainMenu
+                                  ↓
+                                 App
+ 
+ */
 
