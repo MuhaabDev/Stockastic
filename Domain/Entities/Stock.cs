@@ -8,8 +8,14 @@ namespace Stockastic.Domain.Entities
     {
         public int Id { get; set; }
         public string Symbol { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
         public string Company { get; set; } = string.Empty;
         public string Sector {  get; set; } = string.Empty;
+
+        // Navigation
+        public ICollection<Holding> Holdings { get; set; }
+            = new List<Holding>();
+
+        public ICollection<Transaction> Transactions { get; set; }
+            = new List<Transaction>();
     }
 }

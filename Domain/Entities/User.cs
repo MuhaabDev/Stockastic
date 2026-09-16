@@ -11,7 +11,11 @@ namespace Stockastic.Domain.Entities
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public ConsoleColor SelectedColor { get; set; }       
-        // Navigation portfolio
+        public ConsoleColor SelectedColor { get; set; }  
+
+        // Navigation
+        public Portfolio? Portfolio { get; set; }
+        public ICollection<Transaction> Transactions { get; set; } =
+                new List<Transaction>();
     }
 }

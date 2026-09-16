@@ -6,11 +6,13 @@ namespace Stockastic.Domain.Entities
 {
     public class Portfolio
     {
-        public int id;
-        // user id foriegn
-        public decimal Cash = decimal.Zero;
-        public string CreatedAt { get; set; } = string.Empty;
+        public int id { get; set; }
+        public int UserId { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         
-        // navigation user , holdings
+        // Navigation
+        public User User { get; set; } = null!;
+        public ICollection<Holding> Holdings { get; set; }
+             = new List<Holding>();
     }
 }

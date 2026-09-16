@@ -6,6 +6,7 @@ namespace Stockastic.Services.Authentication;
 public interface IUserRepository
 {
     Task<bool> Exists(string email);
-    Task Insert(User user);
     Task<User?> GetByEmail(string email);
+    Task<User?> GetByUsernameOrEmail(string identifier);
+    Task Insert(User user);
 }

@@ -6,14 +6,15 @@ using System.Text;
 namespace Stockastic.UI;
 public class MainMenu(AccountMenu accountMenu , UserMenu userMenu)
 {
-    public void Show()
+    public async Task Show()
     {
         displayHeader();
         while (true)
         {
-            var currentUser = accountMenu.Show();
-            if (currentUser is null) continue;
-            userMenu.Show(currentUser);
+            User? currentUser = await accountMenu.Show();
+            if (currentUser is null)
+                continue;
+            await userMenu.Show(currentUser);
         }
     }
 

@@ -4,7 +4,7 @@ using Stockastic.Services.Authentication;
 namespace Stockastic.UI;
 public class AccountMenu(AuthService authService)
 {
-    public User? Show()
+    public async Task<User?> Show()
     {
         Console.WriteLine("1. Login");
         Console.WriteLine("2. Register");
@@ -18,9 +18,9 @@ public class AccountMenu(AuthService authService)
 
         switch (option) {
             case 1: 
-                return Login();
+                return await Login();
             case 2:
-                Register();
+                await Register();
                 return null;
             default:
                 Console.WriteLine("Invalid option.");
@@ -28,7 +28,7 @@ public class AccountMenu(AuthService authService)
         }
     }
 
-    private User? Login()
+    private async Task<User?> Login()
     {
         Console.Write("Username: ");
         var username = Console.ReadLine();
@@ -36,10 +36,10 @@ public class AccountMenu(AuthService authService)
         Console.Write("Password: ");
         var password = Console.ReadLine();
 
-        return authService.Login(username!, password!);
+        return await authService.Login(username!, password!);
     }
 
-    private void Register()
+    private async Task Register()
     {
         Console.Write("Username: ");
         var username = Console.ReadLine();
@@ -50,6 +50,6 @@ public class AccountMenu(AuthService authService)
         Console.Write("Password: ");
         var password = Console.ReadLine();
 
-        authService.Register(username!, email!, password!);
+        await authService.Register(username!, email!, password!);
     }
 }

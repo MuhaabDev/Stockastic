@@ -5,6 +5,6 @@ using System.Text;
 namespace Stockastic.UI;
 public class App(MainMenu mainMenu)
 {
-    public void Show()=>
-        mainMenu.Show();
+    public async Task Show()=>
+        await mainMenu.Show();
 }

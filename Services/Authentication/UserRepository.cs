@@ -11,10 +11,13 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
     {
         return await context.Users.AnyAsync(u => u.Email == email);
     }
-
     public async Task<User?> GetByEmail(string email)
     {
         return await context.Users.SingleOrDefaultAsync(u => u.Email == email);
+    }
+    public async Task<User?> GetByUsernameOrEmail(string identifier)
+    {
+        return await context.Users.SingleOrDefaultAsync(u =>u.Email == identifier || u.Username == identifier);
     }
 
     public async Task Insert(User user)

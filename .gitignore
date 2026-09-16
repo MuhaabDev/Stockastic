@@ -8,6 +8,8 @@ obj/
 *.suo
 *.userosscache
 *.sln.docstates
+Stockastic.slnx
+
 
 # Visual Studio Code
 .vscode/

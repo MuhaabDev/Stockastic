@@ -7,11 +7,13 @@ namespace Stockastic.Domain.Entities
     public class Holding
     {
         public int Id { get; set; }
-        // FK portfolio_id
-        // FK Stock_id
+        public int PortfolioId { get; set; }
+        public int StockId { get; set; }
         public int Quantity { get; set; } 
         public decimal AverageBuyPrice { get; set; }
 
-        // Navigation : Portfolio , Stock
+        // Navigation
+        public Portfolio Portfolio { get; set; } = null!;
+        public Stock Stock { get; set; } = null!;
     }
 }

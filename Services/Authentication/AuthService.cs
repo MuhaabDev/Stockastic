@@ -1,30 +1,28 @@
 ﻿using Microsoft.VisualBasic;
+using NetTopologySuite.Densify;
 using Stockastic.Data;
 using Stockastic.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 namespace Stockastic.Services.Authentication;
-public class AuthService(ApplicationDbContext context , PasswordHasher passwordHasher , LoginUser loginUser)
+public class AuthService(UserRepository userRepository, PasswordHasher passwordHasher , LoginUser loginUser)
 {
-    public void Register(string username, string email ,string password)
+    public async Task Register(string username, string email ,string password)
     {
+        bool emailExists = await userRepository.Exists(email);
+        if(emailExists)
+            throw new Exception("Email Already Registered");
+            
         var user = new User
         {
             Username = username,
             Email = email,
             PasswordHash = passwordHasher.Hash(password)
         };
-        context.Users.Add(user);
-        context.SaveChanges();
+        await userRepository.Insert(user);
     }
-
-    public User? Login(string username, string password)
+    public async Task<User> Login(string identifier, string password)
     {
-        return context.Users.FirstOrDefault(
-            u => u.Username == username && u.PasswordHash == password
-        );
+        User user = await loginUser.Handle(identifier, password);
+        return user;
     }
 
     public bool CheckPassword(string password)

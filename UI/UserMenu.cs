@@ -8,7 +8,7 @@ using System.Text;
 namespace Stockastic.UI;
 public class UserMenu(AccountService accountService , PortfolioService portfolioService , TradingService tradingService)
 {
-    public void Show(User currentUser)
+    public async Task Show(User currentUser)
     {
         while (true) {
             DisplayMenu();
@@ -20,15 +20,15 @@ public class UserMenu(AccountService accountService , PortfolioService portfolio
             switch (option)
             {
                 case 1:
-                    DisplayBalance(currentUser);
+                    await DisplayBalance(currentUser);
                     break;
 
                 case 2:
-                    AddMoney(currentUser);
+                    await AddMoney(currentUser);
                     break;
 
                 case 3:
-                    Trading(currentUser);
+                    await Trading(currentUser);
                     break;
 
                 case 4:
@@ -55,26 +55,29 @@ public class UserMenu(AccountService accountService , PortfolioService portfolio
         Console.Write("Choose: ");
     }
 
-    private void DisplayBalance(User user)
+    private async Task DisplayBalance(User user)
     {
         var balance = accountService.GetBalance(user.Id);
         Console.WriteLine($"Balance: {balance}");
     }
 
 
-    private void AddMoney(User user)
+    private async Task AddMoney(User user)
     {
+        throw new NotImplementedException();
         // read amount
         // call accountService.AddMoney(...)
     }
 
-    private void Trading(User user)
+    private async Task Trading(User user)
     {
+        throw new NotImplementedException();
         // tradingService...
     }
 
     private void DisplaySettings(User user)
     {
+        throw new NotImplementedException();
         // settings...
     }
 }

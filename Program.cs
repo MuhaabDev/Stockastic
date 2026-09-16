@@ -2,11 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Stockastic.Data;
 using Stockastic.Services;
+using Stockastic.Services.Authentication;
 using Stockastic.UI;
 using System;
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         IConfiguration config = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
@@ -22,10 +23,15 @@ class Program
         //Console.WriteLine(dbContext.Database.CanConnect());
 
         // Services
-        var authService = new AuthService(context);
         var accountService = new AccountService(context);
         var portfolioService = new PortfolioService(context);
         var tradingService = new TradingService(context);
+
+        // Authentication Services
+        var userRepository = new UserRepository(context);
+        var passwordHasher = new PasswordHasher();
+        var loginUser = new LoginUser(userRepository , passwordHasher);
+        var authService = new AuthService(userRepository , passwordHasher , loginUser);
 
         // Menus
         var accountMenu = new AccountMenu(authService);
@@ -36,8 +42,7 @@ class Program
 
         // App
         var app = new App(mainMenu);
-
-        app.Show();
+        await app.Show();
     }
 }
 /*
