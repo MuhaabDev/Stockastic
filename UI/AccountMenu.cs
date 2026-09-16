@@ -1,6 +1,6 @@
 ﻿using Stockastic.Data;
 using Stockastic.Domain.Entities;
-using Stockastic.Services;
+using Stockastic.Services.Authentication;
 namespace Stockastic.UI;
 public class AccountMenu(AuthService authService)
 {

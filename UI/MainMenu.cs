@@ -21,7 +21,7 @@ public class MainMenu(AccountMenu accountMenu , UserMenu userMenu)
     {
         Console.Title = "Stock Portfolio Tracker";
         Console.WriteLine("==========================================================");
-        Console.WriteLine("               Welcome To Stock Portfolio Tracker");
+        Console.WriteLine("               WELCOME TOOOO STOCKASTIC");
         Console.WriteLine("==========================================================");
     }
 }

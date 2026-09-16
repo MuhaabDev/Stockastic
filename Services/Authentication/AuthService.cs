@@ -3,13 +3,19 @@ using Stockastic.Data;
 using Stockastic.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
-namespace Stockastic.Services;
-public class AuthService(ApplicationDbContext context)
+namespace Stockastic.Services.Authentication;
+public class AuthService(ApplicationDbContext context , PasswordHasher passwordHasher , LoginUser loginUser)
 {
     public void Register(string username, string email ,string password)
     {
-        var user = new User { Username = username, Email = email, PasswordHash = password };
+        var user = new User
+        {
+            Username = username,
+            Email = email,
+            PasswordHash = passwordHasher.Hash(password)
+        };
         context.Users.Add(user);
         context.SaveChanges();
     }
@@ -20,6 +26,7 @@ public class AuthService(ApplicationDbContext context)
             u => u.Username == username && u.PasswordHash == password
         );
     }
+
     public bool CheckPassword(string password)
     {
         if (password.Length < 8)
@@ -76,6 +83,7 @@ public class AuthService(ApplicationDbContext context)
 
         return true;
     }
+
     public bool CheckUsername(string username)
     {
         bool exist = false;
