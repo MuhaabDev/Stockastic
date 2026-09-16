@@ -1,15 +1,17 @@
 ﻿using Stockastic.Data;
 using Stockastic.Domain.Entities;
 using Stockastic.Services;
+using Stockastic.Services.Trading;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Stockastic.UI;
-public class UserMenu(AccountService accountService , PortfolioService portfolioService , TradingService tradingService)
+public class UserMenu(WalletService walletService , Settings settings)
 {
     public async Task Show(User currentUser)
     {
+        ApplyUserSettings(currentUser);
         while (true) {
             DisplayMenu();
             if (!int.TryParse(Console.ReadLine(), out int option))
@@ -24,7 +26,10 @@ public class UserMenu(AccountService accountService , PortfolioService portfolio
                     break;
 
                 case 2:
-                    await AddMoney(currentUser);
+                    Console.Write("Enter Amount To Add : ");
+                    if (!decimal.TryParse(Console.ReadLine(), out decimal amount))
+                        Console.WriteLine("Invalid Input");
+                    await AddMoney(currentUser , amount);
                     break;
 
                 case 3:
@@ -32,7 +37,7 @@ public class UserMenu(AccountService accountService , PortfolioService portfolio
                     break;
 
                 case 4:
-                    DisplaySettings(currentUser);
+                    await DisplaySettings(currentUser);
                     break;
 
                 case 5:
@@ -57,16 +62,13 @@ public class UserMenu(AccountService accountService , PortfolioService portfolio
 
     private async Task DisplayBalance(User user)
     {
-        var balance = accountService.GetBalance(user.Id);
+        decimal balance = await walletService.GetBalance(user.Id);
         Console.WriteLine($"Balance: {balance}");
     }
 
-
-    private async Task AddMoney(User user)
+    private async Task AddMoney(User user , decimal amount)
     {
-        throw new NotImplementedException();
-        // read amount
-        // call accountService.AddMoney(...)
+        await walletService.AddMoney(user.Id, amount);
     }
 
     private async Task Trading(User user)
@@ -75,9 +77,13 @@ public class UserMenu(AccountService accountService , PortfolioService portfolio
         // tradingService...
     }
 
-    private void DisplaySettings(User user)
+    private async Task DisplaySettings(User user)
     {
-        throw new NotImplementedException();
-        // settings...
+        await settings.show(user);
+    }
+
+    private void ApplyUserSettings(User user)
+    {
+        Console.ForegroundColor = user.SelectedColor;
     }
 }

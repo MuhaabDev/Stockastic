@@ -4,7 +4,8 @@ using Stockastic.Data;
 using Stockastic.Services;
 using Stockastic.Services.Authentication;
 using Stockastic.UI;
-using System;
+using Stockastic.Services.Trading;
+using Stockastic.Services.Settings;
 class Program
 {
     static async Task Main(string[] args)
@@ -21,11 +22,10 @@ class Program
 
         using var context = new ApplicationDbContext(dbContextOptions);
         //Console.WriteLine(dbContext.Database.CanConnect());
-
         // Services
-        var accountService = new AccountService(context);
-        var portfolioService = new PortfolioService(context);
+        var walletService = new WalletService(context);
         var tradingService = new TradingService(context);
+        var settingService = new SettingsService(context);
 
         // Authentication Services
         var userRepository = new UserRepository(context);
@@ -34,8 +34,9 @@ class Program
         var authService = new AuthService(userRepository , passwordHasher , loginUser);
 
         // Menus
+        var setting = new Settings(settingService) ;
         var accountMenu = new AccountMenu(authService);
-        var userMenu = new UserMenu(accountService, portfolioService , tradingService);
+        var userMenu = new UserMenu(walletService , setting);
 
         // Main menu
         var mainMenu = new MainMenu(accountMenu,userMenu);
@@ -46,6 +47,7 @@ class Program
     }
 }
 /*
+  Get-ChildItem -Recurse -Include *.cs | Get-Content | Measure-Object -Line
                      ApplicationDbContext
                    /        |         \
                   /         |          \
@@ -59,6 +61,4 @@ class Program
                                MainMenu
                                   ↓
                                  App
- 
  */
-

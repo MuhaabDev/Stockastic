@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using NetTopologySuite.Densify;
 using Stockastic.Data;
 using Stockastic.Domain.Entities;
@@ -18,6 +19,7 @@ public class AuthService(UserRepository userRepository, PasswordHasher passwordH
             PasswordHash = passwordHasher.Hash(password)
         };
         await userRepository.Insert(user);
+        // Send a notification to portfolio service to create a new portfolio for this user id
     }
     public async Task<User> Login(string identifier, string password)
     {

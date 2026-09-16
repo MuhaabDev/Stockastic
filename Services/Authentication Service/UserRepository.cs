@@ -22,6 +22,7 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
 
     public async Task Insert(User user)
     {
+        user.Portfolio = new Portfolio();
         context.Users.Add(user);
         await context.SaveChangesAsync();
     }

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Stockastic.Services
+namespace Stockastic.Services.Trading
 {
     public class TradingService(ApplicationDbContext context)
     {

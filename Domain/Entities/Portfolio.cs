@@ -8,6 +8,7 @@ namespace Stockastic.Domain.Entities
     {
         public int id { get; set; }
         public int UserId { get; set; }
+        public decimal CashBalance { get; set; } = 0m;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         
         // Navigation
