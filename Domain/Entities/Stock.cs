@@ -10,6 +10,7 @@ namespace Stockastic.Domain.Entities
         public string Symbol { get; set; } = string.Empty;
         public string Company { get; set; } = string.Empty;
         public string Sector {  get; set; } = string.Empty;
+        public string Industry {  get; set; } = string.Empty;
 
         // Navigation
         public ICollection<Holding> Holdings { get; set; }

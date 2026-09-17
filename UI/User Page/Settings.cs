@@ -59,4 +59,4 @@ public class Settings(SettingsService settings)
             return colorName;
         }
     }
-}
+}   

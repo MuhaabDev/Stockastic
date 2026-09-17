@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Stockastic.UI;
-public class UserMenu(WalletService walletService , Settings settings)
+public class UserMenu(WalletService walletService , Settings settings , TradingMenu tradingMenu)
 {
     public async Task Show(User currentUser)
     {
@@ -51,7 +51,7 @@ public class UserMenu(WalletService walletService , Settings settings)
     }
     private void DisplayMenu()
     {
-        Console.WriteLine();
+        Console.WriteLine("===========================================");
         Console.WriteLine("1. Display Balance");
         Console.WriteLine("2. Add Money");
         Console.WriteLine("3. Trading");
@@ -73,8 +73,7 @@ public class UserMenu(WalletService walletService , Settings settings)
 
     private async Task Trading(User user)
     {
-        throw new NotImplementedException();
-        // tradingService...
+        await tradingMenu.Show(user);
     }
 
     private async Task DisplaySettings(User user)
