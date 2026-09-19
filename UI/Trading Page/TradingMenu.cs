@@ -2,45 +2,40 @@
 using Stockastic.Services;
 using Stockastic.UI.Trading_Page;
 namespace Stockastic.UI;
-public class TradingMenu(WatchlistMenu watchlist , TradeMenu trade , HoldingsMenu holdings)
+public class TradingMenu(WatchlistMenu watchlistMenu , TradeMenu tradeMenu , HoldingsMenu holdingsMenu)
 {
     public async Task Show(User currentUser)
     {
-        bool inTradingMenu = true;
-        while (inTradingMenu)
+        while (true)
         {
             DisplayMenu();
-            if (!int.TryParse(Console.ReadLine(), out int option))
-                Console.WriteLine("Invlid Input");
+            int option = MenuInput.ReadOption(1, 4);
             switch (option)
             {
                 case 1:
-                    await trade.Show(currentUser);
+                    await tradeMenu.Show(currentUser);
                     break;
 
                 case 2:
-                    await holdings.Show(currentUser);
+                    await holdingsMenu.Show(currentUser);
                     break;
 
                 case 3:
-                    await watchlist.Show(currentUser);
+                    await watchlistMenu.Show(currentUser);
                     break;
                 case 4:
-                    inTradingMenu = false;
-                    break;
-                default:
-                    Console.WriteLine("Invalid Option.");
-                    break;
+                    return;
             }
         }
     }
 
     private void DisplayMenu()
     {
-        Console.WriteLine("1. Trade ");
-        Console.WriteLine("2. Holdings ");
+        Console.WriteLine();
+        Console.WriteLine("===== Trading =====");
+        Console.WriteLine("1. Trade");
+        Console.WriteLine("2. Holdings");
         Console.WriteLine("3. Watchlist");
-        Console.WriteLine("4. Exit ");
-        Console.Write("Choose : ");
+        Console.WriteLine("4. Back");
     }
 }

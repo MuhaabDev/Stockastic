@@ -19,4 +19,19 @@ public class WatchlistService
     {
         throw new NotImplementedException();
     }
+
+    internal async Task<bool> AddStock(int id1, int id2)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal async Task<bool> RemoveStock(int id, string symbol)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal async Task<List<Stock>> GetWatchlist(int id)
+    {
+        throw new NotImplementedException();
+    }
 }

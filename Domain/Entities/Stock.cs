@@ -11,6 +11,7 @@ namespace Stockastic.Domain.Entities
         public string Company { get; set; } = string.Empty;
         public string Sector {  get; set; } = string.Empty;
         public string Industry {  get; set; } = string.Empty;
+        public decimal price { get; set; } 
 
         // Navigation
         public ICollection<Holding> Holdings { get; set; }
