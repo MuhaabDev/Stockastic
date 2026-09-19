@@ -54,7 +54,6 @@ public class TradeMenu(TradingService tradingService , StockService stockService
         }
 
         bool completed = await tradingService.Sell(currentUser,holding.Stock,quantity.Value);
-
         Console.WriteLine(completed  ? "Sale completed successfully.": "Sale couldn't be completed.");
     }
 
