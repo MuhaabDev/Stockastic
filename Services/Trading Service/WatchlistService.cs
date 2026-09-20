@@ -1,37 +1,50 @@
-﻿using Stockastic.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Stockastic.Data;
+using Stockastic.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 namespace Stockastic.Services.Trading_Service;
 
-public class WatchlistService
+public class WatchlistService(ApplicationDbContext context)
 {
-    public Task ViewWatchList(object user)
+    public async Task<Watchlist?> GetWatchList(User currentUser)
     {
-        throw new NotImplementedException();
+        return await context.Watchlists
+            .Include(w => w.Items)
+            .ThenInclude(i => i.Stock)
+            .SingleOrDefaultAsync(w => w.UserId == currentUser.Id);
     }
-    public async Task AddStockWatchList(User user)
+    public async Task<bool> AddStockWatchList(User currentUser , Stock stock)
     {
-        throw new NotImplementedException();
+        Watchlist? watchlist = await GetWatchList(currentUser);
+        if (watchlist == null) 
+            throw new InvalidOperationException("User does not have a watchlist.");
+
+        bool alreadyExists = watchlist.Items.Any(i => i.StockId == stock.Id);
+        if (alreadyExists) 
+            return false;
+
+        WatchlistItem item = new WatchlistItem { WatchlistId = watchlist.Id, StockId = stock.Id };
+        watchlist.Items.Add(item);
+        await context.SaveChangesAsync();
+        return true;
     }
 
-    public async Task RemoveStockWatchList(User currentUser)
+    public async Task<bool> RemoveStockWatchList(User currentUser , Stock stock)
     {
-        throw new NotImplementedException();
-    }
+        Watchlist? watchlist = await GetWatchList(currentUser);
 
-    internal async Task<bool> AddStock(int id1, int id2)
-    {
-        throw new NotImplementedException();
-    }
+        if (watchlist == null)
+            throw new InvalidOperationException("User does not have a watchlist.");
 
-    internal async Task<bool> RemoveStock(int id, string symbol)
-    {
-        throw new NotImplementedException();
-    }
+        WatchlistItem? item = watchlist.Items.SingleOrDefault(i => i.StockId == stock.Id);
 
-    internal async Task<List<Stock>> GetWatchlist(int id)
-    {
-        throw new NotImplementedException();
+        if (item == null)
+            return false;
+
+        watchlist.Items.Remove(item);
+        await context.SaveChangesAsync();
+        return true;
     }
 }

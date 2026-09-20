@@ -14,10 +14,8 @@ namespace Stockastic.Domain.Entities
         public decimal price { get; set; } 
 
         // Navigation
-        public ICollection<Holding> Holdings { get; set; }
-            = new List<Holding>();
-
-        public ICollection<Transaction> Transactions { get; set; }
-            = new List<Transaction>();
+        public ICollection<Holding> Holdings { get; set; } = new List<Holding>();
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+        public ICollection<WatchlistItem> WatchlistItems { get; set; } = new List<WatchlistItem>();           
     }
 }

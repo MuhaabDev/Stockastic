@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Stockastic.Data;
@@ -11,9 +12,11 @@ using Stockastic.Data;
 namespace Stockastic.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260920103627_add_watchlist")]
+    partial class add_watchlist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,9 +226,6 @@ namespace Stockastic.Data.Migrations
                     b.Property<int>("StockId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("StockId1")
-                        .HasColumnType("integer");
-
                     b.Property<int>("WatchlistId")
                         .HasColumnType("integer");
 
@@ -233,10 +233,7 @@ namespace Stockastic.Data.Migrations
 
                     b.HasIndex("StockId");
 
-                    b.HasIndex("StockId1");
-
-                    b.HasIndex("WatchlistId", "StockId")
-                        .IsUnique();
+                    b.HasIndex("WatchlistId");
 
                     b.ToTable("WatchlistItems");
                 });
@@ -304,14 +301,10 @@ namespace Stockastic.Data.Migrations
             modelBuilder.Entity("Stockastic.Domain.Entities.WatchlistItem", b =>
                 {
                     b.HasOne("Stockastic.Domain.Entities.Stock", "Stock")
-                        .WithMany()
+                        .WithMany("WatchlistItems")
                         .HasForeignKey("StockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Stockastic.Domain.Entities.Stock", null)
-                        .WithMany("WatchlistItems")
-                        .HasForeignKey("StockId1");
 
                     b.HasOne("Stockastic.Domain.Entities.Watchlist", "Watchlist")
                         .WithMany("Items")

@@ -8,6 +8,7 @@ using Stockastic.UI.User_Page;
 using Stockastic.Services.Trading;
 using Stockastic.Services.Settings;
 using Stockastic.UI;
+using Stockastic.Services.Trading_Service;
 class Program
 {
     static async Task Main(string[] args)
@@ -24,10 +25,14 @@ class Program
 
         using var context = new ApplicationDbContext(dbContextOptions);
         //Console.WriteLine(dbContext.Database.CanConnect());
+        
         // Services
+        var stockService = new StockService(context);
         var walletService = new WalletService(context);
-        var tradingService = new TradingService(context);
         var settingService = new SettingsService(context);
+        var portfolioService = new PortfolioService(context);
+        var tradingService = new TradingService(stockService , walletService , context , portfolioService);
+        var watchlistService = new WatchlistService(context);
 
         // Authentication Services
         var userRepository = new UserRepository(context);
@@ -37,9 +42,10 @@ class Program
 
         // Menus
         var setting = new Settings(settingService) ;
-
-        // TODO : Make - WatchlistMenu , TradeMenu  , HoldingsMenu and give them to trading menu
-        var tradingMenu = new TradingMenu(tradingService);
+        var watctlistMenu = new WatchlistMenu(watchlistService, stockService);
+        var tradeMenu = new TradeMenu(tradingService , stockService , portfolioService);
+        var holdingMenu = new HoldingsMenu(portfolioService , stockService);
+        var tradingMenu = new TradingMenu(watctlistMenu , tradeMenu , holdingMenu);
         var userMenu = new UserMenu(walletService , setting , tradingMenu);
         var accountMenu = new AccountMenu(authService);
         var mainMenu = new MainMenu(accountMenu,userMenu);
@@ -49,8 +55,7 @@ class Program
         await app.Show();
     }
 }
-// TODO : I want you before running to update database : every user should have watchlist table
-// TODO : if everything is created successfully like if a user is created should he have a ready based holding initialized with a count zero or only be created when he buy or sell
+// TODO : problem with getting stock price to buy it
 /*
   Get-ChildItem -Recurse -Include *.cs | Get-Content | Measure-Object -Line
                      ApplicationDbContext

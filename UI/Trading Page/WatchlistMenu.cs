@@ -34,9 +34,9 @@ public class WatchlistMenu(WatchlistService watchlistService, StockService stock
 
     private async Task ViewWatchlist(User currentUser)
     {
-        List<Stock> stocks = await watchlistService.GetWatchlist(currentUser.Id);
+        Watchlist? watchlist = await watchlistService.GetWatchList(currentUser);
 
-        if (stocks.Count == 0)
+        if (watchlist == null || watchlist.Items.Count == 0)
         {
             Console.WriteLine("Watchlist is empty.");
             return;
@@ -44,17 +44,17 @@ public class WatchlistMenu(WatchlistService watchlistService, StockService stock
 
         Console.WriteLine();
         Console.WriteLine("===== Watchlist =====");
-
-        foreach (Stock stock in stocks)
+        Console.WriteLine( $"{"Symbol",-10}" + $"{"Price",12}");
+        foreach (WatchlistItem item in watchlist.Items)
         {
-            Console.WriteLine( $"{stock.Symbol,-8} {stock.price,10:F2}");
+            Stock stock = item.Stock;
+            Console.WriteLine($"{stock.Symbol,-10}" + $"{stock.price,12:F2}");
         }
     }
 
     private async Task AddStock(User currentUser)
     {
         Console.Write("Enter Stock Symbol: ");
-
         string? symbol = Console.ReadLine();
 
         if (string.IsNullOrWhiteSpace(symbol))
@@ -64,15 +64,13 @@ public class WatchlistMenu(WatchlistService watchlistService, StockService stock
         }
 
         Stock? stock = await stockService.GetStock(symbol);
-
         if (stock == null)
         {
             Console.WriteLine("Stock doesn't exist.");
             return;
         }
 
-        bool added =  await watchlistService.AddStock(currentUser.Id, stock.Id);
-
+        bool added =  await watchlistService.AddStockWatchList(currentUser, stock);
         if (added)
             Console.WriteLine("Stock added to watchlist.");
         else
@@ -82,7 +80,6 @@ public class WatchlistMenu(WatchlistService watchlistService, StockService stock
     private async Task RemoveStock(User currentUser)
     {
         Console.Write("Enter Stock Symbol: ");
-
         string? symbol = Console.ReadLine();
 
         if (string.IsNullOrWhiteSpace(symbol))
@@ -91,8 +88,14 @@ public class WatchlistMenu(WatchlistService watchlistService, StockService stock
             return;
         }
 
-        bool removed = await watchlistService.RemoveStock(currentUser.Id, symbol);
+        Stock? stock = await stockService.GetStock(symbol);
+        if (stock == null)
+        {
+            Console.WriteLine("Stock doesn't exist.");
+            return;
+        }
 
+        bool removed = await watchlistService.RemoveStockWatchList(currentUser, stock);
         if (removed)
             Console.WriteLine("Stock removed.");
         else

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CsvHelper.Configuration.Attributes;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Stockastic.Domain.Entities
@@ -12,9 +14,10 @@ namespace Stockastic.Domain.Entities
         public string PasswordHash { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public ConsoleColor SelectedColor { get; set; } = ConsoleColor.White;
+        
         // Navigation
         public Portfolio? Portfolio { get; set; }
-        public ICollection<Transaction> Transactions { get; set; } =
-                new List<Transaction>();
+        public Watchlist? Watchlist { get; set; }
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     }
 }
