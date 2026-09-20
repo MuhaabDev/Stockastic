@@ -8,11 +8,15 @@ public sealed class LoginUser(IUserRepository userRepository, IPasswordHasher Pa
     public async Task<User> Handle(string idetifier , string password)
     {
         User? user = await userRepository.GetByUsernameOrEmail(idetifier);
+        
         if (user is null)
-            throw new Exception("The user was not found");
+            return user!;
         
         bool verified = PasswordHasher.verify(password, user.PasswordHash);
-        if (!verified) throw new Exception("The password is incorrect");
+
+        if (!verified)
+            return user;
+
         return user;
     }
 }

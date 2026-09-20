@@ -55,6 +55,7 @@ class Program
         await app.Show();
     }
 }
+
 // TODO : problem with getting stock price to buy it
 /*
   Get-ChildItem -Recurse -Include *.cs | Get-Content | Measure-Object -Line

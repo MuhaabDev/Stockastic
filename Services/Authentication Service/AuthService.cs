@@ -6,11 +6,11 @@ using Stockastic.Domain.Entities;
 namespace Stockastic.Services.Authentication;
 public class AuthService(UserRepository userRepository, PasswordHasher passwordHasher , LoginUser loginUser)
 {
-    public async Task Register(string username, string email ,string password)
+    public async Task<bool> Register(string username, string email ,string password)
     {
         bool emailExists = await userRepository.Exists(email);
-        if(emailExists)
-            throw new Exception("Email Already Registered");
+        if (emailExists)
+            return false;
             
         var user = new User
         {
@@ -19,11 +19,11 @@ public class AuthService(UserRepository userRepository, PasswordHasher passwordH
             PasswordHash = passwordHasher.Hash(password)
         };
         await userRepository.Insert(user);
-        // Send a notification to portfolio service to create a new portfolio for this user id
+        return true;
     }
-    public async Task<User> Login(string identifier, string password)
+    public async Task<User?> Login(string identifier, string password)
     {
-        User user = await loginUser.Handle(identifier, password);
+        User? user = await loginUser.Handle(identifier, password);
         return user;
     }
 
