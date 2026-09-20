@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Stockastic.Data;
@@ -11,9 +12,11 @@ using Stockastic.Data;
 namespace Stockastic.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260917103656_update_stock")]
+    partial class update_stock
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,9 +109,6 @@ namespace Stockastic.Data.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
-                    b.Property<decimal>("price")
-                        .HasColumnType("numeric");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Symbol")
@@ -193,54 +193,6 @@ namespace Stockastic.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Stockastic.Domain.Entities.Watchlist", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Watchlists");
-                });
-
-            modelBuilder.Entity("Stockastic.Domain.Entities.WatchlistItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("StockId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("StockId1")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WatchlistId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StockId");
-
-                    b.HasIndex("StockId1");
-
-                    b.HasIndex("WatchlistId", "StockId")
-                        .IsUnique();
-
-                    b.ToTable("WatchlistItems");
-                });
-
             modelBuilder.Entity("Stockastic.Domain.Entities.Holding", b =>
                 {
                     b.HasOne("Stockastic.Domain.Entities.Portfolio", "Portfolio")
@@ -290,40 +242,6 @@ namespace Stockastic.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Stockastic.Domain.Entities.Watchlist", b =>
-                {
-                    b.HasOne("Stockastic.Domain.Entities.User", "User")
-                        .WithOne("Watchlist")
-                        .HasForeignKey("Stockastic.Domain.Entities.Watchlist", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Stockastic.Domain.Entities.WatchlistItem", b =>
-                {
-                    b.HasOne("Stockastic.Domain.Entities.Stock", "Stock")
-                        .WithMany()
-                        .HasForeignKey("StockId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Stockastic.Domain.Entities.Stock", null)
-                        .WithMany("WatchlistItems")
-                        .HasForeignKey("StockId1");
-
-                    b.HasOne("Stockastic.Domain.Entities.Watchlist", "Watchlist")
-                        .WithMany("Items")
-                        .HasForeignKey("WatchlistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Stock");
-
-                    b.Navigation("Watchlist");
-                });
-
             modelBuilder.Entity("Stockastic.Domain.Entities.Portfolio", b =>
                 {
                     b.Navigation("Holdings");
@@ -334,8 +252,6 @@ namespace Stockastic.Data.Migrations
                     b.Navigation("Holdings");
 
                     b.Navigation("Transactions");
-
-                    b.Navigation("WatchlistItems");
                 });
 
             modelBuilder.Entity("Stockastic.Domain.Entities.User", b =>
@@ -343,13 +259,6 @@ namespace Stockastic.Data.Migrations
                     b.Navigation("Portfolio");
 
                     b.Navigation("Transactions");
-
-                    b.Navigation("Watchlist");
-                });
-
-            modelBuilder.Entity("Stockastic.Domain.Entities.Watchlist", b =>
-                {
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }
