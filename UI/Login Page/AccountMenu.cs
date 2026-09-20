@@ -1,4 +1,5 @@
-﻿using Stockastic.Data;
+﻿using NetTopologySuite.Densify;
+using Stockastic.Data;
 using Stockastic.Domain.Entities;
 using Stockastic.Services.Authentication;
 namespace Stockastic.UI;
@@ -6,6 +7,7 @@ public class AccountMenu(AuthService authService)
 {
     public async Task<User?> Show()
     {
+        ApplyDefaultSettings();
         Console.WriteLine("1. Login");
         Console.WriteLine("2. Register");
         Console.Write("Choose: ");
@@ -30,26 +32,45 @@ public class AccountMenu(AuthService authService)
 
     private async Task<User?> Login()
     {
-        Console.Write("Username: ");
-        var username = Console.ReadLine();
+        Console.Write("Username or Email: ");
+        string? identifier = Console.ReadLine();
 
         Console.Write("Password: ");
-        var password = Console.ReadLine();
+        string? password = Console.ReadLine();
 
-        return await authService.Login(username!, password!);
+
+        if (string.IsNullOrWhiteSpace(identifier) || string.IsNullOrWhiteSpace(password))
+        {
+            Console.WriteLine("Username/email and password are required.");
+            return null;
+        }
+
+        return await authService.Login(identifier, password);
     }
 
     private async Task Register()
     {
         Console.Write("Username: ");
-        var username = Console.ReadLine();
+        string? username = Console.ReadLine();
 
         Console.Write("Email: ");
-        var email = Console.ReadLine();
+        string? email = Console.ReadLine();
 
         Console.Write("Password: ");
-        var password = Console.ReadLine();
+        string? password = Console.ReadLine();
 
-        await authService.Register(username!, email!, password!);
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            Console.WriteLine("All fields are required.");
+            return;
+        }
+
+        bool completed = await authService.Register(username, email, password);
+        Console.WriteLine( completed ? "Account Registered Successfully" : "Account Already Exists");
+    }
+
+    private void ApplyDefaultSettings()
+    {
+        Console.ForegroundColor = ConsoleColor.White;
     }
 }

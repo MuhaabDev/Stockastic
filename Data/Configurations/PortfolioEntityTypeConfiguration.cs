@@ -8,8 +8,11 @@ namespace Stockastic.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Portfolio> builder)
         {
+            builder.HasKey(p => p.id);
+
             builder.Property(p => p.CashBalance)
-               .HasPrecision(18, 2);
+                .HasPrecision(18, 2);
         }
+
     }
 }
